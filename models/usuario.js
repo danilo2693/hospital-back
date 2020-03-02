@@ -1,14 +1,14 @@
-var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
+let mongoose = require('mongoose');
+let uniqueValidator = require('mongoose-unique-validator');
 
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var rolesValidos = {
+let rolesValidos = {
     values: ['USER_ROLE', 'ADMIN_ROLE'],
     message: '{VALUE} RolError'
 }
 
-var usuarioSchema = new Schema({
+let usuarioSchema = new Schema({
     nombre: { type: String, required: [true, 'NameRequired'] },
     email: { type: String, unique: true, required: [true, 'MailRequired'] },
     password: { type: String, required: [true, 'PasswordRequired'] },

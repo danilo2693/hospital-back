@@ -1,29 +1,32 @@
 let express = require('express');
-let bcrypt = require('bcryptjs');
 let mdVerificarToken = require('../middlewares/autenticacion');
 let app = express();
 
 let Usuario = require('../models/usuario');
+let Hospital = require('../models/hospital');
+let Medico = require('../models/medico');
 
-// Obtener todos los usuarios
+// Obtener todos los medicos
 app.get('/', (req, res, next) => {
   let desde = req.query.desde || 0;
   desde = Number(desde);
-  Usuario.find({}, 'nombre email img role')
+  Medico.find({})
     .skip(desde)
     .limit(5)
-    .exec((err, usuarios) => {
+    .populate({ path: 'usuario', select: 'nombre email', model: Usuario })
+    .populate({ path: 'hospital', model: Hospital })
+    .exec((err, medicos) => {
       if (err) {
         return res.status(400).json({
           ok: false,
-          mensaje: 'ErrorFindUser',
+          mensaje: 'ErrorFindMedico',
           errors: err
         });
       } else {
-        Usuario.count({}, (errorConteo, conteo) => {
+        Medico.count({}, (errorConteo, conteo) => {
           res.status(200).json({
             ok: true,
-            usuarios,
+            medicos,
             total: conteo
           });
         });
@@ -31,67 +34,65 @@ app.get('/', (req, res, next) => {
     });
 });
 
-// Crear usuario
+// Crear medico
 app.post('/', mdVerificarToken.verificarToken, (req, res) => {
   let body = req.body;
-  let usuario = new Usuario({
+  let medico = new Medico({
     nombre: body.nombre,
-    email: body.email,
-    password: bcrypt.hashSync(body.password, 10),
     img: body.img,
-    role: body.role
+    usuario: req.usuario._id,
+    hospital: body.hospital
   });
 
-  usuario.save((err, usuarioBd) => {
+  medico.save((err, medicoDB) => {
     if (err) {
       return res.status(500).json({
         ok: false,
-        mensaje: 'ErrorCreateUser',
+        mensaje: 'ErrorCreateMedico',
         errors: err
       });
     } else {
       res.status(201).json({
         ok: true,
-        usuarios: usuarioBd,
+        medicos: medicoDB,
         usuarioToken: req.usuario
       });
     }
   });
 });
 
-// Actualizar usuario
+// Actualizar medico
 app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
   let id = req.params.id;
-  Usuario.findById(id, (err, usuario) => {
+  Medico.findById(id, (err, medico) => {
     if (err) {
       return res.status(500).json({
         ok: false,
-        mensaje: 'ErrorFindUser',
+        mensaje: 'ErrorFindMedico',
         errors: err
       });
-    } else if (!usuario) {
+    } else if (!medico) {
       return res.status(404).json({
         ok: false,
-        mensaje: 'ErrorNotFoundUser',
-        errors: { message: 'ErrorNotFoundUser' }
+        mensaje: 'ErrorNotFoundMedico',
+        errors: { message: 'ErrorNotFoundMedico' }
       });
     } else {
       let body = req.body;
-      usuario.nombre = body.nombre;
-      usuario.email = body.email;
-      usuario.role = body.role;
-      usuario.save((errorCreate, usuarioBd) => {
+      medico.nombre = body.nombre;
+      medico.usuario = req.usuario._id;
+      medico.hospital = body.hospital;
+      medico.save((errorCreate, medicoBd) => {
         if (errorCreate) {
           return res.status(400).json({
             ok: false,
-            mensaje: 'ErrorUpdateUser',
+            mensaje: 'ErrorUpdateMedico',
             errors: errorCreate
           });
         } else {
-          usuarioBd.password = '';
           return res.status(200).json({
             ok: true,
-            usuarioBd
+            medicoBd
           });
         }
       });
@@ -101,24 +102,24 @@ app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
 
 app.delete('/:id', mdVerificarToken.verificarToken, (req, res) => {
   let id = req.params.id;
-  Usuario.findByIdAndDelete(id, (err, usuarioEliminado) => {
+  Medico.findByIdAndDelete(id, (err, medicoEliminado) => {
     if (err) {
       return res.status(500).json({
         ok: false,
-        mensaje: 'ErrorDeleteUser',
+        mensaje: 'ErrorDeleteMedico',
         errors: err
       });
-    } else if (!usuarioEliminado) {
+    } else if (!medicoEliminado) {
       return res.status(404).json({
         ok: false,
-        mensaje: 'ErrorNotFoundUser',
-        errors: { message: 'ErrorNotFoundUser' }
+        mensaje: 'ErrorNotFoundMedico',
+        errors: { message: 'ErrorNotFoundMedico' }
       });
     } else {
-      usuarioEliminado.password = '';
+      medicoEliminado.password = '';
       return res.status(200).json({
         ok: true,
-        usuario: usuarioEliminado
+        usuario: medicoEliminado
       });
     }
   });

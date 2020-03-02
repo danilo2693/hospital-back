@@ -1,16 +1,22 @@
 // Requires
-var express = require('express');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+let express = require('express');
+let mongoose = require('mongoose');
+let bodyParser = require('body-parser');
 
 // Importar rutas
-var appRoutes = require('./routes/app');
-var usuarioRoutes = require('./routes/usuario');
-var loginRoutes = require('./routes/login');
+let appRoutes = require('./routes/app');
+let usuarioRoutes = require('./routes/usuario');
+let loginRoutes = require('./routes/login');
+let hospitalRoutes = require('./routes/hospital');
+let medicoRoutes = require('./routes/medico');
+let busquedaRoutes = require('./routes/busqueda');
+let uploadRoutes = require('./routes/upload');
+let imagenesRoutes = require('./routes/imagenes');
+
 
 
 // Inicializar variables
-var app = express();
+let app = express();
 
 // Body-parser configuración
 app.use(bodyParser.urlencoded({ extended: false}))
@@ -23,14 +29,23 @@ mongoose.connect('mongodb://localhost:27017/hospital', {
     })
     .then(() => console.log('Base de datos: \x1b[32m%s\x1b[0m', 'online'))
     .catch(err => {
-    console.log('Error en conexión: '+err);
+    console.log('Error en conexión: ' + err);
     });
-mongoose.set('useCreateIndex', true)
+mongoose.set('useCreateIndex', true);
 
+// Server index config
+// let serverIndex = require('serve-index');
+// app.use(express.static(__dirname+'/'));
+// app.use('/uploads', serverIndex(__dirname + '/uploads'));
 
 // Rutas
 app.use('/usuario', usuarioRoutes);
 app.use('/login', loginRoutes);
+app.use('/hospital', hospitalRoutes);
+app.use('/medico', medicoRoutes);
+app.use('/busqueda', busquedaRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/imagen', imagenesRoutes);
 app.use('/', appRoutes);
 
 
