@@ -1,0 +1,1 @@
+module.exports.SEED = '@5eed-d1fficult-jwt-log1n-user';
