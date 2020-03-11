@@ -32,6 +32,26 @@ app.get('/', (req, res, next) => {
     });
 });
 
+// Obtener hospital por id
+app.get('/:id', (req, res, next) => {
+  let id = req.params.id;
+  Hospital.findById(id)
+    .exec((err, hospital) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: 'ErrorFindHospital',
+          errors: err
+        });
+      } else {
+        res.status(200).json({
+          ok: true,
+          hospital,
+        });
+      }
+    });
+});
+
 // Crear hospital
 app.post('/', mdVerificarToken.verificarToken, (req, res) => {
   let body = req.body;

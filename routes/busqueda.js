@@ -46,7 +46,8 @@ app.get('/coleccion/:tabla/:busqueda', (req, res, next) => {
   promesa.then(respuestas => {
     res.status(200).json({
       ok: true,
-      [tabla]: respuestas
+      [tabla]: respuestas,
+      total: respuestas.length
     });
   });
 });
@@ -82,7 +83,7 @@ function buscarMedicos(regex) {
 
 function buscarUsuario(regex) {
   return new Promise((resolve, reject) => {
-    Usuario.find({}, 'nombre email img role')
+    Usuario.find({}, 'nombre email img role google')
       .or([{ nombre: regex }, { email: regex }])
       .exec((err, usuarios) => {
         if (err) {

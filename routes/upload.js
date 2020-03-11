@@ -71,8 +71,8 @@ function asignarImagen(tabla, id, nombreNuevo, res) {
             usuarioDbActualizado.password = '';
             return res.status(200).json({
               ok: true,
-              mensaje: 'ExitUserUpdate',
-              usuarioDbActualizado
+              mensaje: 'PhotoUpdateSuccess',
+              usuario: usuarioDbActualizado
             });
           });
         }
