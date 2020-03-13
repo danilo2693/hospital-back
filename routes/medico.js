@@ -19,7 +19,7 @@ app.get('/', (req, res, next) => {
       if (err) {
         return res.status(400).json({
           ok: false,
-          mensaje: 'ErrorFindMedico',
+          mensaje: 'ErrorFindDoctor',
           errors: err
         });
       } else {
@@ -29,6 +29,32 @@ app.get('/', (req, res, next) => {
             medicos,
             total: conteo
           });
+        });
+      }
+    });
+});
+
+// Obtener medico por id
+app.get('/:id', (req, res, next) => {
+  let id = req.params.id;
+  Medico.findById(id)
+    .populate({ path: 'usuario', select: 'nombre email', model: Usuario })
+    .populate({
+      path: 'hospital',
+      model: Hospital,
+      populate: { path: 'usuario', select: 'nombre email', model: Usuario }
+    })
+    .exec((err, medico) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: 'ErrorFindDoctor',
+          errors: err
+        });
+      } else {
+        res.status(200).json({
+          ok: true,
+          medico
         });
       }
     });
@@ -48,13 +74,13 @@ app.post('/', mdVerificarToken.verificarToken, (req, res) => {
     if (err) {
       return res.status(500).json({
         ok: false,
-        mensaje: 'ErrorCreateMedico',
+        mensaje: 'ErrorCreateDoctor',
         errors: err
       });
     } else {
       res.status(201).json({
         ok: true,
-        medicos: medicoDB,
+        medico: medicoDB,
         usuarioToken: req.usuario
       });
     }
@@ -68,14 +94,14 @@ app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
     if (err) {
       return res.status(500).json({
         ok: false,
-        mensaje: 'ErrorFindMedico',
+        mensaje: 'ErrorFindDoctor',
         errors: err
       });
     } else if (!medico) {
       return res.status(404).json({
         ok: false,
-        mensaje: 'ErrorNotFoundMedico',
-        errors: { message: 'ErrorNotFoundMedico' }
+        mensaje: 'ErrorNotFoundDoctor',
+        errors: { message: 'ErrorNotFoundDoctor' }
       });
     } else {
       let body = req.body;
@@ -86,13 +112,13 @@ app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
         if (errorCreate) {
           return res.status(400).json({
             ok: false,
-            mensaje: 'ErrorUpdateMedico',
+            mensaje: 'ErrorUpdateDoctor',
             errors: errorCreate
           });
         } else {
           return res.status(200).json({
             ok: true,
-            medicoBd
+            medico: medicoBd
           });
         }
       });
@@ -106,14 +132,14 @@ app.delete('/:id', mdVerificarToken.verificarToken, (req, res) => {
     if (err) {
       return res.status(500).json({
         ok: false,
-        mensaje: 'ErrorDeleteMedico',
+        mensaje: 'ErrorDeleteDoctor',
         errors: err
       });
     } else if (!medicoEliminado) {
       return res.status(404).json({
         ok: false,
-        mensaje: 'ErrorNotFoundMedico',
-        errors: { message: 'ErrorNotFoundMedico' }
+        mensaje: 'ErrorNotFoundDoctor',
+        errors: { message: 'ErrorNotFoundDoctor' }
       });
     } else {
       medicoEliminado.password = '';

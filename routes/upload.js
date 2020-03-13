@@ -112,11 +112,11 @@ function asignarImagen(tabla, id, nombreNuevo, res) {
           var pathImagenAnterior = `./uploads/medico/${medicoDb.img}`;
           eliminarImagenAnterior(pathImagenAnterior);
           medicoDb.img = nombreNuevo;
-          medicoDb.save((errorActualizar, medicoDbActualizado) => {
+          medicoDb.save((errorActualizar, medico) => {
             return res.status(200).json({
               ok: true,
               mensaje: 'ExitMedicoUpdate',
-              medicoDbActualizado
+              medico
             });
           });
         }

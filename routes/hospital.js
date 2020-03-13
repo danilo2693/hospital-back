@@ -36,6 +36,7 @@ app.get('/', (req, res, next) => {
 app.get('/:id', (req, res, next) => {
   let id = req.params.id;
   Hospital.findById(id)
+    .populate({ path: 'usuario', select: 'nombre email', model: Usuario })
     .exec((err, hospital) => {
       if (err) {
         return res.status(400).json({
@@ -46,7 +47,7 @@ app.get('/:id', (req, res, next) => {
       } else {
         res.status(200).json({
           ok: true,
-          hospital,
+          hospital
         });
       }
     });
@@ -70,7 +71,7 @@ app.post('/', mdVerificarToken.verificarToken, (req, res) => {
     } else {
       res.status(201).json({
         ok: true,
-        hospitales: hospitalDB,
+        hospital: hospitalDB,
         usuarioToken: req.usuario._id
       });
     }
@@ -107,7 +108,7 @@ app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
         } else {
           return res.status(200).json({
             ok: true,
-            hospitalBd
+            hospital: hospitalBd
           });
         }
       });
