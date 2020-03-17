@@ -23,7 +23,7 @@ app.get('/', (req, res, next) => {
           errors: err
         });
       } else {
-        Medico.count({}, (errorConteo, conteo) => {
+        Medico.countDocuments({}, (errorConteo, conteo) => {
           res.status(200).json({
             ok: true,
             medicos,

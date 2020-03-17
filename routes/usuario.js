@@ -1,6 +1,6 @@
 let express = require('express');
 let bcrypt = require('bcryptjs');
-let mdVerificarToken = require('../middlewares/autenticacion');
+let mdAutenticacion = require('../middlewares/autenticacion');
 let app = express();
 
 let Usuario = require('../models/usuario');
@@ -101,7 +101,7 @@ app.post('/:id', (req, res) => {
 });
 
 // Actualizar usuario
-app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
+app.put('/:id', [mdAutenticacion.verificarToken, mdAutenticacion.verificarAdminRoleOMismoUsuario], (req, res) => {
   let id = req.params.id;
   Usuario.findById(id, (err, usuario) => {
     if (err) {
@@ -140,7 +140,7 @@ app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
   });
 });
 
-app.delete('/:id', mdVerificarToken.verificarToken, (req, res) => {
+app.delete('/:id', [mdAutenticacion.verificarToken, mdAutenticacion.verificarAdminRole], (req, res) => {
   let id = req.params.id;
   Usuario.findByIdAndDelete(id, (err, usuarioEliminado) => {
     if (err) {
