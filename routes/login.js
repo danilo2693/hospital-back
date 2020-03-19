@@ -30,6 +30,16 @@ async function verify(token) {
   };
 }
 
+let mdAutenticacion = require('../middlewares/autenticacion');
+
+app.get('/renovar-token', mdAutenticacion.verificarToken, (req, res) => {
+  let token = jwt.sign({ usuario: req.usuario }, SEED, { expiresIn: 14400 });
+  res.status(200).json({
+    ok: true,
+    token
+  });
+});
+
 app.post('/google', async (req, res) => {
   let token = req.body.token;
   let googleUser = await verify(token).catch(error => {
@@ -131,7 +141,6 @@ function obtenerMenu(role) {
       submenu: [
         { subtitulo: 'Dashboard', url: '/dashboard' },
         { subtitulo: 'ProgressBar', url: '/progress' },
-        { subtitulo: 'Graphics', url: '/graficas1' },
         { subtitulo: 'Promises', url: '/promesas' },
         { subtitulo: 'Rxjs', url: '/rxjs' }
       ]
@@ -140,14 +149,14 @@ function obtenerMenu(role) {
       titulo: 'Maintenance',
       icono: 'mdi mdi-folder-lock-open',
       submenu: [
-        { subtitulo: 'Hospitals', url: '/hospitals' },
-        { subtitulo: 'Doctors', url: '/doctors' }
+        { subtitulo: 'Hospitals', url: '/maintenance/hospitals' },
+        { subtitulo: 'Doctors', url: '/maintenance/doctors' }
       ]
     }
   ];
 
   if (role === 'ADMIN_ROLE') {
-    menu[1].submenu.unshift({ subtitulo: 'Users', url: '/users' });
+    menu[1].submenu.unshift({ subtitulo: 'Users', url: '/maintenance/users' });
   }
   return menu;
 }
