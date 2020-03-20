@@ -1,2 +1,10 @@
 module.exports.SEED = '@5eed-d1fficult-jwt-log1n-user';
 module.exports.CLIENT_ID = '211575268817-4tt0bmo6m9ss2edg9auriefcd3nr2t6m.apps.googleusercontent.com';
+module.exports.CLIENT_URL = 'http://localhost:4200/#';
+module.exports.GMAIL_SERVICE_NAME = 'gmail'
+module.exports.GMAIL_SERVICE_HOST = 'smtp.gmail.com'
+module.exports.GMAIL_SERVICE_SECURE = false
+module.exports.GMAIL_SERVICE_PORT = 587
+module.exports.GMAIL_NAME = 'Danilo Román'
+module.exports.GMAIL_USER_NAME = ''
+module.exports.GMAIL_USER_PASSWORD = ''

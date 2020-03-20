@@ -61,7 +61,7 @@ function asignarImagen(tabla, id, nombreNuevo, res) {
           return res.status(404).json({
             ok: false,
             mensaje: 'ErrorUserNotFound',
-            errors: { message: 'ErrorUserNotFound' }
+            errors: { mensaje: 'ErrorUserNotFound' }
           });
         } else {
           let pathImagenAnterior = './uploads/usuario/' + usuarioDB.img;
@@ -84,7 +84,7 @@ function asignarImagen(tabla, id, nombreNuevo, res) {
           return res.status(404).json({
             ok: false,
             mensaje: 'ErrorHospitalNotFound',
-            errors: { message: 'ErrorHospitalNotFound' }
+            errors: { mensaje: 'ErrorHospitalNotFound' }
           });
         } else {
           var pathImagenAnterior = `./uploads/hospital/${hospitalDb.img}`;
@@ -106,7 +106,7 @@ function asignarImagen(tabla, id, nombreNuevo, res) {
           return res.status(404).json({
             ok: false,
             mensaje: 'ErrorMedicoNotFound',
-            errors: { message: 'ErrorMedicoNotFound' }
+            errors: { mensaje: 'ErrorMedicoNotFound' }
           });
         } else {
           var pathImagenAnterior = `./uploads/medico/${medicoDb.img}`;

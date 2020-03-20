@@ -101,7 +101,7 @@ app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
       return res.status(404).json({
         ok: false,
         mensaje: 'ErrorNotFoundDoctor',
-        errors: { message: 'ErrorNotFoundDoctor' }
+        errors: { mensaje: 'ErrorNotFoundDoctor' }
       });
     } else {
       let body = req.body;
@@ -139,7 +139,7 @@ app.delete('/:id', mdVerificarToken.verificarToken, (req, res) => {
       return res.status(404).json({
         ok: false,
         mensaje: 'ErrorNotFoundDoctor',
-        errors: { message: 'ErrorNotFoundDoctor' }
+        errors: { mensaje: 'ErrorNotFoundDoctor' }
       });
     } else {
       medicoEliminado.password = '';

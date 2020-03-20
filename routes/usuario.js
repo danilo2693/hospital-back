@@ -6,6 +6,13 @@ let app = express();
 let Usuario = require('../models/usuario');
 let Hospital = require('../models/hospital');
 
+let MailConfig = require('../config/email');
+let hbs = require('nodemailer-express-handlebars');
+let gmailTransport = MailConfig.GmailTransport;
+
+let GMAIL_NAME = require('../config/config').GMAIL_NAME;
+let GMAIL_USER_NAME = require('../config/config').GMAIL_USER_NAME;
+
 // Obtener todos los usuarios
 app.get('/', (req, res, next) => {
   let desde = req.query.desde || 0;
@@ -73,7 +80,7 @@ app.get('/:id/hospitales', (req, res, next) => {
 });
 
 // Crear usuario
-app.post('/:id', (req, res) => {
+app.post('/', (req, res) => {
   let body = req.body;
   let usuario = new Usuario({
     nombre: body.nombre,
@@ -113,8 +120,8 @@ app.put('/:id', [mdAutenticacion.verificarToken, mdAutenticacion.verificarAdminR
     } else if (!usuario) {
       return res.status(404).json({
         ok: false,
-        mensaje: 'ErrorNotFoundUser',
-        errors: { message: 'ErrorNotFoundUser' }
+        mensaje: 'ErrorUserNotFound',
+        errors: { mensaje: 'ErrorUserNotFound' }
       });
     } else {
       let body = req.body;
@@ -152,8 +159,8 @@ app.delete('/:id', [mdAutenticacion.verificarToken, mdAutenticacion.verificarAdm
     } else if (!usuarioEliminado) {
       return res.status(404).json({
         ok: false,
-        mensaje: 'ErrorNotFoundUser',
-        errors: { message: 'ErrorNotFoundUser', usuarioEliminado }
+        mensaje: 'ErrorUserNotFound',
+        errors: { mensaje: 'ErrorUserNotFound', usuarioEliminado }
       });
     } else {
       usuarioEliminado.password = '';
@@ -162,6 +169,27 @@ app.delete('/:id', [mdAutenticacion.verificarToken, mdAutenticacion.verificarAdm
         usuario: usuarioEliminado
       });
     }
+  });
+});
+
+app.get('/email/template', (req, res, next) => {
+  MailConfig.ViewOption(gmailTransport, hbs);
+  let HelperOptions = {
+    from: '"'+ GMAIL_NAME +'" <'+ GMAIL_USER_NAME + ">",
+    to: 'fernan.roman@ceiba.com.co',
+    subject: 'Hellow world!',
+    template: 'recovery-password-email',
+    context: {
+      name: 'tariqul_islam',
+      email: 'danilo.2693@gmail.com',
+      address: '52, Kadamtola Shubag dhaka'
+    }
+  };
+  gmailTransport.sendMail(HelperOptions, (error, info) => {
+    if (error) {
+      res.json(error);
+    }
+    res.json(info);
   });
 });
 

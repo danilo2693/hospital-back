@@ -92,7 +92,7 @@ app.put('/:id', mdVerificarToken.verificarToken, (req, res) => {
       return res.status(404).json({
         ok: false,
         mensaje: 'ErrorNotFoundHospital',
-        errors: { message: 'ErrorNotFoundHospital' }
+        errors: { mensaje: 'ErrorNotFoundHospital' }
       });
     } else {
       let body = req.body;
@@ -129,7 +129,7 @@ app.delete('/:id', mdVerificarToken.verificarToken, (req, res) => {
       return res.status(404).json({
         ok: false,
         mensaje: 'ErrorNotFoundHospital',
-        errors: { message: 'ErrorNotFoundHospital' }
+        errors: { mensaje: 'ErrorNotFoundHospital' }
       });
     } else {
       hospitalEliminado.password = '';

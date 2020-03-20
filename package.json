@@ -18,6 +18,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.2",
     "mongoose-unique-validator": "^2.0.3",
+    "nodemailer": "^6.4.5",
+    "nodemailer-express-handlebars": "^3.3.0",
     "serve-index": "^1.9.1"
   },
   "devDependencies": {
